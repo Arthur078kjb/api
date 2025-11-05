@@ -5,6 +5,7 @@ async function Listar(){
 }
 
 async function Inserir(matricula, nome, sobrenome){
+    nome = nome.toUpperCase()
     const aluno = await repoAluno.Inserir(matricula, nome, sobrenome);
     return aluno;
 }
