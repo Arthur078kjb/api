@@ -11,11 +11,6 @@ import servicosRoutes from "./routes/servicosRoutes.js";
 import pagamentosRoutes from "./routes/pagamentosRoutes.js";
 
 dotenv.config();
-console.log(process.env);
-console.log(
-  "JWT:",
-  process.env.JWT_SECRET
-);
 
 const app = express();
 
@@ -23,93 +18,28 @@ const app = express();
    MIDDLEWARES
 ======================= */
 
-// Ativa o CORS para permitir que o front-end na Vercel acesse a API sem bloqueios
-app.use(cors());
-
+// Configuração robusta de CORS
+app.use(cors()); 
+app.options("*", cors()); // Resolve o problema de preflight (OPTIONS)
 app.use(express.json());
 
 /* =======================
    ROTAS API
 ======================= */
 
-app.use(
-  "/clientes",
-  clientesRoutes
-);
-
-app.use(
-  "/equipamentos",
-  equipamentosRoutes
-);
-
-app.use(
-  "/ordens",
-  ordensRoutes
-);
-
-app.use(
-  "/usuarios",
-  usuariosRoutes
-);
-
-app.use(
-  "/servicos",
-  servicosRoutes
-);
-
-app.use(
-  "/pagamentos",
-  pagamentosRoutes
-);
+app.use("/clientes", clientesRoutes);
+app.use("/equipamentos", equipamentosRoutes);
+app.use("/ordens", ordensRoutes);
+app.use("/usuarios", usuariosRoutes);
+app.use("/servicos", servicosRoutes);
+app.use("/pagamentos", pagamentosRoutes);
 
 /* =======================
    ROTA BASE
 ======================= */
 
 app.get("/", (req, res) => {
-  res.json({
-    mensagem:
-      "API funcionando 🚀",
-    rotas: [
-      // CLIENTES
-      "GET /clientes",
-      "POST /clientes",
-      "PUT /clientes/:id",
-      "DELETE /clientes/:id",
-
-      // EQUIPAMENTOS
-      "GET /equipamentos",
-      "POST /equipamentos",
-      "PUT /equipamentos/:id",
-      "DELETE /equipamentos/:id",
-
-      // ORDENS
-      "GET /ordens",
-      "GET /ordens/:id",
-      "POST /ordens",
-      "PUT /ordens/:id",
-      "DELETE /ordens/:id",
-
-      // USUÁRIOS
-      "GET /usuarios",
-      "GET /usuarios/:id",
-      "POST /usuarios",
-      "PUT /usuarios/:id",
-      "DELETE /usuarios/:id",
-
-      // SERVIÇOS
-      "GET /servicos",
-      "POST /servicos",
-      "PUT /servicos/:id",
-      "DELETE /servicos/:id",
-
-      // PAGAMENTOS
-      "GET /pagamentos",
-      "POST /pagamentos",
-      "PUT /pagamentos/:id",
-      "DELETE /pagamentos/:id",
-    ],
-  });
+  res.json({ mensagem: "API funcionando 🚀" });
 });
 
 /* =======================
@@ -117,10 +47,7 @@ app.get("/", (req, res) => {
 ======================= */
 
 app.use((req, res) => {
-  res.status(404).json({
-    erro:
-      "Rota não encontrada",
-  });
+  res.status(404).json({ erro: "Rota não encontrada" });
 });
 
 /* =======================
@@ -130,9 +57,6 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(
-    `Servidor rodando em ambiente de produção na porta: ${PORT}`
-  );
+  console.log(`Servidor rodando em ambiente de produção na porta: ${PORT}`);
+  console.log("CORS configurado para suporte a preflight");
 });
-
-// Comentário extra para garantir alteração e forçar o Git a subir o deploy
