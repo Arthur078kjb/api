@@ -3,23 +3,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 // ROTAS
-import clientesRoutes
-from "./routes/clientesRoutes.js";
-
-import equipamentosRoutes
-from "./routes/equipamentosRoutes.js";
-
-import ordensRoutes
-from "./routes/ordensRoutes.js";
-
-import usuariosRoutes
-from "./routes/usuariosRoutes.js";
-
-import servicosRoutes
-from "./routes/servicosRoutes.js";
-
-import pagamentosRoutes
-from "./routes/pagamentosRoutes.js";
+import clientesRoutes from "./routes/clientesRoutes.js";
+import equipamentosRoutes from "./routes/equipamentosRoutes.js";
+import ordensRoutes from "./routes/ordensRoutes.js";
+import usuariosRoutes from "./routes/usuariosRoutes.js";
+import servicosRoutes from "./routes/servicosRoutes.js";
+import pagamentosRoutes from "./routes/pagamentosRoutes.js";
 
 dotenv.config();
 console.log(process.env);
@@ -34,6 +23,7 @@ const app = express();
    MIDDLEWARES
 ======================= */
 
+// Ativa o CORS para permitir que o front-end na Vercel acesse a API sem bloqueios
 app.use(cors());
 
 app.use(express.json());
@@ -77,14 +67,10 @@ app.use(
 ======================= */
 
 app.get("/", (req, res) => {
-
   res.json({
-
     mensagem:
       "API funcionando 🚀",
-
     rotas: [
-
       // CLIENTES
       "GET /clientes",
       "POST /clientes",
@@ -122,9 +108,7 @@ app.get("/", (req, res) => {
       "POST /pagamentos",
       "PUT /pagamentos/:id",
       "DELETE /pagamentos/:id",
-
     ],
-
   });
 });
 
@@ -133,12 +117,9 @@ app.get("/", (req, res) => {
 ======================= */
 
 app.use((req, res) => {
-
   res.status(404).json({
-
     erro:
       "Rota não encontrada",
-
   });
 });
 
@@ -146,16 +127,12 @@ app.use((req, res) => {
    SERVIDOR
 ======================= */
 
-const PORT =
-  process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-
   console.log(
-
-    `Servidor rodando em:
-     http://localhost:${PORT}`
-
+    `Servidor rodando em ambiente de produção na porta: ${PORT}`
   );
-
 });
+
+// Comentário extra para garantir alteração e forçar o Git a subir o deploy
