@@ -1,4 +1,4 @@
-import * as repo from "../repositories/repositoryordens.js";
+import * as repo from "../repositories/repositoryOrdens.js";
 
 export const listar = () => repo.listar();
 export const buscar = (id) => repo.buscar(id);
