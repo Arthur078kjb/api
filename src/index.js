@@ -1,8 +1,6 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 
-// ROTAS
 import clientesRoutes from "./routes/clientesRoutes.js";
 import equipamentosRoutes from "./routes/equipamentosRoutes.js";
 import ordensRoutes from "./routes/ordensRoutes.js";
@@ -11,21 +9,24 @@ import servicosRoutes from "./routes/servicosRoutes.js";
 import pagamentosRoutes from "./routes/pagamentosRoutes.js";
 
 dotenv.config();
-
 const app = express();
 
-/* =======================
-   MIDDLEWARES
-======================= */
+// CORS Manual
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 
-// Configuração robusta de CORS
-app.use(cors()); 
-app.options("*", cors()); // Resolve o problema de preflight (OPTIONS)
 app.use(express.json());
 
-/* =======================
-   ROTAS API
-======================= */
+// Log de requisições
+app.use((req, res, next) => {
+  console.log(`Recebido: ${req.method} ${req.url}`);
+  next();
+});
 
 app.use("/clientes", clientesRoutes);
 app.use("/equipamentos", equipamentosRoutes);
@@ -34,29 +35,16 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/servicos", servicosRoutes);
 app.use("/pagamentos", pagamentosRoutes);
 
-/* =======================
-   ROTA BASE
-======================= */
+app.get("/", (req, res) => res.json({ status: "API online" }));
 
-app.get("/", (req, res) => {
-  res.json({ mensagem: "API funcionando 🚀" });
+// Captura erros globais
+app.use((err, req, res, next) => {
+  console.error("ERRO CRÍTICO NO SERVIDOR:", err);
+  res.status(500).json({ erro: "Erro interno no servidor" });
 });
 
-/* =======================
-   ROTA NÃO ENCONTRADA
-======================= */
-
-app.use((req, res) => {
-  res.status(404).json({ erro: "Rota não encontrada" });
-});
-
-/* =======================
-   SERVIDOR
-======================= */
-
+// CORREÇÃO: Usando a porta do ambiente E o host '0.0.0.0'
 const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em ambiente de produção na porta: ${PORT}`);
-  console.log("CORS configurado para suporte a preflight");
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
